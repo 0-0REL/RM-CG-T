@@ -1,5 +1,8 @@
+"""
+Deteccion de dibuja puntos de la mano en vivio
+"""
+
 import os
-import time
 import cv2
 import mediapipe as mp
 from mediapipe.tasks import python
