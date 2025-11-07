@@ -1,5 +1,5 @@
 """
-@REL
+@0-0REL
 prueba para mover robot con coppelia sim
 """
 from coppeliasim_zmqremoteapi_client import RemoteAPIClient
