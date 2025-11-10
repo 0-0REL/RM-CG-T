@@ -1,18 +1,6 @@
 import cv2
 import numpy as np
 
-# Tus parámetros
-camera_matrix = np.array([
-    [526.48134479, 0.0, 299.12153832],
-    [0.0, 525.59203794, 231.6123197],
-    [0.0, 0.0, 1.0]
-])
-
-dist_coeffs = np.array([[-0.01308301, 0.03617054, 0.00575928, -0.00136356, -0.00339902]])
-
-import cv2
-import numpy as np
-
 # Tus parámetros de calibración
 camera_matrix = np.array([
     [526.48134479, 0.0, 299.12153832],

@@ -1,6 +1,12 @@
+"""
+Calibracion de camara usando patron de ajedrez
+programa de OpenCV
+
+Al final del programa cambiar nombre del archivo .npz segun la camara
+calib_cam_lap.npz -> Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Integrated Webcam
+"""
 import cv2
 import numpy as np
-import os
 import glob
  
 # Defining the dimensions of checkerboard
@@ -19,7 +25,7 @@ objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 prev_img_shape = None
  
 # Extracting path of individual image stored in a given directory
-images = glob.glob('test/vision/fotos/cameraCalib/lap_pant/*.jpg')
+images = glob.glob('dev/vision/fotos/cameraCalib/lap_pant/*.jpg')
 for fname in images:
     img = cv2.imread(fname)
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -65,3 +71,10 @@ print("rvecs : \n")
 print(rvecs)
 print("tvecs : \n")
 print(tvecs)
+
+np.savez('dev/vision/calib_cam_lap.npz', 
+         mtx=mtx, 
+         dist=dist, 
+         rvecs=rvecs, 
+         tvecs=tvecs,
+         ret=ret)

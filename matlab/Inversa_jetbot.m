@@ -1,4 +1,6 @@
 %% modelo de robot
+% Nota: Peter Corke usa ese orden: theta, d, a, alpha
+clc, clear
 clc,clear
 L(1) = Link([0     135     0     pi/2], 'standard');
 L(2) = Link([0     0       110   0],    'standard');
@@ -39,7 +41,7 @@ for idx = 1:1000  %Comienza calculo
         ok = true;
         break
     end
-    Jinv = pinv(jacobiano_jacobot(q_k));
+    Jinv = pinv(jacobiano_jetbot(q_k));
     q_k = q_k+Jinv*error;
     % for i = 1:6 %Encierra los angulos en [-180, 180]
     %     while true

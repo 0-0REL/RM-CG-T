@@ -42,6 +42,10 @@ class Hand:
             running_mode=mp.tasks.vision.RunningMode.IMAGE
         )
         self.detector = vision.HandLandmarker.create_from_options(OPTIONS)
+        self.fx = 526.48134479
+        self.fy = 525.59203794
+        self.cx = 299.12153832
+        self.cy = 231.6123197
         
     def wrist_pos(self, mp_image):
         detection_result = self.detector.detect(mp_image)
@@ -71,8 +75,7 @@ try:
             break
         
         # Convertir BGR a RGB
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         
         # Detección sincrónica (retorna el resultado inmediatamente)
         pos = hand.wrist_pos(mp_image)
