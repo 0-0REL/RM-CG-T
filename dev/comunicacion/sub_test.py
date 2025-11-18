@@ -1,9 +1,9 @@
-# suscriptor.py
+# Preuba de subscriptor para recibit datos del publicador
 import zmq
 
 context = zmq.Context()
-socket = context.socket(zmq.SUB)
-socket.connect("tcp://localhost:5556")
+socket = context.socket(zmq.SUB) # socket tipo subscritor
+socket.connect("tcp://localhost:5556") # Red local a puerto 5556
 socket.subscribe("")  # Suscribirse a todos los mensajes
 
 print("👂 Suscriptor iniciado - Escuchando datos...")

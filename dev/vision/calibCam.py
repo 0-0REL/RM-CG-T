@@ -1,10 +1,9 @@
-"""
-Calibracion de camara usando patron de ajedrez
-programa de OpenCV
+# Calibracion de camara usando patron de ajedrez
+# programa de OpenCV
+#
+# Al final del programa cambiar nombre del archivo .npz segun la camara
+# calib_cam_lap.npz -> Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Integrated Webcam
 
-Al final del programa cambiar nombre del archivo .npz segun la camara
-calib_cam_lap.npz -> Cheng Uei Precision Industry Co., Ltd (Foxlink) HP Wide Vision HD Integrated Webcam
-"""
 import cv2
 import numpy as np
 import glob

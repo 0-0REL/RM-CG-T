@@ -1,11 +1,11 @@
-# publicador.py
+# Prueba de publicador con ZMQ modo pub-sub
 import zmq
 import time
 import random
 
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
-socket.bind("tcp://*:5556")
+socket.bind("tcp://*:5556") # Comunicación en red local, puerto 5556
 
 print("📡 Publicador iniciado - Transmitiendo datos...")
 

@@ -1,6 +1,5 @@
+# Calibración del robot, alinear y después jola
 from pymycobot import MyCobot280
-
-from pymycobot import PI_PORT, PI_BAUD # When using the Raspberry Pi version of mycobot, you can reference these two variables to initialize MyCobot. If not, you can leave this line of code blank
 import time
 
 # The above needs to be written at the beginning of the code, meaning to import the project package
@@ -38,7 +37,7 @@ for i in range(1, 7):
 # Power on the robot to lock the robot
 mc.power_on()
 time.sleep(2)
-print("Enviando a la posicion cero...")
+print("Enviando a la posición cero...")
 mc.send_angles([0, -90.0, 0.0, 90.0, 90.0, 0.0], 10)
 while mc.is_moving():
     pass

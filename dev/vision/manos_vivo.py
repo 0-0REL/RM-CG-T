@@ -1,6 +1,6 @@
-"""
-Deteccion de dibuja puntos de la mano en vivio
-"""
+# @0-0REL
+# Deteccion de dibuja puntos de la mano en vivio
+
 
 import os
 import cv2
