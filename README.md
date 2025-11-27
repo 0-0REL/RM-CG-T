@@ -4,12 +4,16 @@ Usa MyCobot280:
 
 ## Carpetas
 
+<div align="center">
+
 | | Contenido |
 |-|-----------|
 | [dev](./dev/) | Modulos de prueba, archivos independientes |
 | [matlab](./matlab/) | Calculos con matlab |
 | [myCobot](./myCobot/) | - Modelo para simulación <br> - Modelo CAD <br> - STL del modelo CAD |
 | [src](./src/) | Implementación funcional |
+
+</div>
 
 ## Uso
 
@@ -21,6 +25,7 @@ python3 -m pip install -r requirements.txt
 ### Iniciar
 
 ```bash
+cd src/
 # Obtener coordenadas de la mano
 python hand_coord.py
 # Mover el robot
@@ -30,11 +35,13 @@ python mycobot_control.py
 ### Simulación
 
 ```bash
+cd src/
 python hand_coord.py
 # En mycobot_control.py en la clase robot seleccionar modo 3 o 4
 python mycobot_control.py
 # Abrir coppeliaSim y cargar escena
-# Inicia simulación desde dev/robot/sim/
+# Inicia simulación
+cd ../dev/robot/sim/
 python simMyCobot.py
 ```
 
