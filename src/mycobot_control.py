@@ -14,16 +14,19 @@ import numpy as np
 import math
 
 class robot:
-    def __init__(self,conec:bool=True, port:str='/dev/ttyUSB0', bps:int=1000000):
+    def __init__(self,modo:int=1, port:str='/dev/ttyUSB0', bps:int=1000000, port_sim:int=5557):
         """_summary_
 
         Args:
-            conec (bool, optional): _description_. Defaults to True.
+            modo (int, optional): Set mode: 1 robot is connected, 2 test, 3 simulation. Defaults to 1.
             port (str, optional): _description_. Defaults to '/dev/ttyUSB0'.
             bps (int, optional): _description_. Defaults to 1000000.
+            port_sim (int, optional): _description_. Defaults to 5557.
         """
         self.q_ini = np.deg2rad(np.array([0, 90, 0, -90, -90, 0]))
-        if conec:
+        self.robotMode = modo
+        
+        if modo == 1:
             self.mc = MyCobot280(port, bps)
             print('Iniciando MyCobot280')
             
@@ -39,10 +42,17 @@ class robot:
                 pass
             
             print('MyCobot280 listo')
-            self.robotConec = True
+            
+        elif modo == 2:
+            print("Modo prueba, sin robot")
+        elif modo == 3 or modo == 4:
+            print("Simulación")
+            self.context = zmq.Context()
+            self.socket = self.context.socket(zmq.PUB)
+            self.socket.bind(f"tcp://*:{port_sim}")
         else:
-            print("modo sin robot")
-            self.robotConec = False
+            raise ValueError("Modo no válido")
+            
       
     def fwd_k(self, q_1:float, q_2:float, q_3:float, q_4:float, q_5:float, q_6:float) -> np.ndarray:
         """Cinematica directa de MyCobot280
@@ -202,15 +212,24 @@ class robot:
                         break
         if ok:
             self.q_ini = q_k
-            q_k = np.rad2deg(q_k)
-            #print(q_k)
-            if self.robotConec:
+            if self.robotMode == 1:
+                q_k = np.rad2deg(q_k)
                 self.mc.send_angles([q_k[0], q_k[1], q_k[2], q_k[3], q_k[4], q_k[5]], 50)
                 while self.mc.is_moving():
                     pass
+            elif self.robotMode == 3 or self.robotMode == 4:
+                mensaje = {
+                    "q0": q_k[0],
+                    "q1": q_k[1],
+                    "q2": q_k[2],
+                    "q3": q_k[3],
+                    "q4": q_k[4],
+                    "q5": q_k[5],
+                    "timestamp": time.time()
+                }
+                self.socket.send_json(mensaje)
             return True
         else:
-            print(False)
             return False
         
 if __name__ == "__main__":
@@ -220,22 +239,26 @@ if __name__ == "__main__":
         socket.setsockopt(zmq.CONFLATE, 1)
         socket.connect("tcp://localhost:5556")
         socket.subscribe("")  # Suscribirse a todos los mensajes
-        rob = robot()
+        rob = robot(3)
         while True:
-            #x, y, z = map(float, input("Ingresar coordenada: ").split())
-            mensaje = socket.recv_json()
-            x = mensaje["x"]
-            y = mensaje["y"]
-            z = mensaje["z"]
-            timestamp = mensaje["timestamp"]
-            print(timestamp)
-            _ = rob.inv_k(x=45.6+x, y=-63.4+y, z=415.8+z)
+            if rob.robotMode == 2 or rob.robotMode == 4:
+                x, y, z = map(float, input("Ingresar coordenada: ").split())
+            else:
+                mensaje = socket.recv_json()
+                x = mensaje["x"]
+                y = mensaje["y"]
+                z = mensaje["z"]
+                timestamp = mensaje["timestamp"]
+            
+            if rob.inv_k(x=45.6+x, y=-63.4+y, z=415.8+z):
+                #print(timestamp)
+                pass
             
     except KeyboardInterrupt:
         print("\nInterrumpido")
         
     finally:
-        if rob.robotConec:
+        if rob.robotMode == 1:
             print("Apagando Robot...")
             rob.mc.send_angles([0, 135, -120, 30, -90, 0], 100)
             while rob.mc.is_moving():
@@ -243,5 +266,8 @@ if __name__ == "__main__":
             rob.mc.power_off()
             time.sleep(1)
             rob.mc.close()
+        elif rob.robotMode == 3:
+            rob.socket.close()
+            rob.context.term()
         socket.close()
         context.term()

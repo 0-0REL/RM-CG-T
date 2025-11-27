@@ -1,8 +1,6 @@
-"""
-07-11-2025
-@0-0REL
-Envia posicion de muñeca, coodendas cartecianas objetivo del robot
-"""
+#07-11-2025
+#@0-0REL
+#Envia posicion de muñeca, coodendas cartecianas objetivo del robot
 
 import os
 import time
@@ -33,8 +31,9 @@ class Comu:
 
 class Hand:
     def __init__(self):
-        MODEL = os.path.abspath('src/hand_landmarker.task')
-        BASE_OPTIONS = python.BaseOptions(model_asset_path=MODEL)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        pathModel = os.path.join(script_dir, 'hand_landmarker.task')
+        BASE_OPTIONS = python.BaseOptions(model_asset_path=pathModel)
         # Modo IMAGE (más simple, sincrónico)
         OPTIONS = vision.HandLandmarkerOptions(
             base_options=BASE_OPTIONS,
@@ -125,7 +124,10 @@ def pixel_to_world_simple(coords, camera_matrix, rotation):
     return p_w
 
 try:
-    calib_data = np.load('dev/vision/calib_cam_lap.npz')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(script_dir)
+    camCalib = os.path.join(project_root, 'dev', 'vision', 'calib_cam_lap.npz')
+    calib_data = np.load(camCalib)
     K = calib_data['mtx']
     rot = euler_to_rotation_matrix(np.array([np.pi/2, 0, -np.pi/2]))
     #rot = euler_to_rotation_matrix(np.array([0, 0, 0]))
@@ -147,7 +149,7 @@ try:
         # Dibujar landmarks
         annotated_image = hand.draw_wrist(frame, pos)
           
-        if pos != False:
+        if pos is not False:
             pos_w = pixel_to_world_simple(pos,K, rot)
             print(pos_w)
             pubHand.enviar(pos_w)

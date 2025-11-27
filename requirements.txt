@@ -1,0 +1,6 @@
+numpy>=1.20.0
+opencv-contrib-python
+mediapipe
+pymycobot
+pyzmq
+coppeliasim_zmqremoteapi_client
